@@ -1,0 +1,4024 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketerManager - Plataforma Completa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #0f172a;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+            font-weight: 400;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            color: white;
+            padding: 2.5rem 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            box-shadow: 8px 0 32px rgba(59, 130, 246, 0.15);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            transform: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar.collapsed {
+            width: 80px;
+        }
+
+        .sidebar.collapsed .sidebar-header .logo span,
+        .sidebar.collapsed .nav-section-title,
+        .sidebar.collapsed .nav-item span {
+            display: none;
+        }
+
+        .sidebar.collapsed .logo-mm {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            margin-right: 0;
+        }
+
+        .sidebar.collapsed .nav-item {
+            justify-content: center;
+            padding: 0.75rem;
+        }
+
+        .sidebar.collapsed .nav-icon {
+            margin-right: 0;
+            font-size: 1.2rem;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .sidebar-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar.collapsed .sidebar-toggle {
+            right: 0.5rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-mm {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+            margin-right: 1rem;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            letter-spacing: -0.02em;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: #60a5fa;
+        }
+
+        .sidebar-nav {
+            padding: 0 1rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+            flex-shrink: 0;
+        }
+
+        /* Asegurar que el sidebar vaya hasta el fondo */
+        .sidebar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, #1e3a8a);
+            pointer-events: none;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #93c5fd;
+            margin-bottom: 0.75rem;
+            padding: 0 1rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: #e2e8f0;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 0.25rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-weight: 500;
+        }
+
+        .nav-icon {
+            width: 20px;
+            margin-right: 0.75rem;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 3rem;
+            padding-top: 0;
+            min-height: 100vh;
+            width: calc(100vw - 280px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 50%, #1e40af 100%);
+            color: white;
+            padding: 1.5rem 3rem;
+            border-radius: 0;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: calc(100vw - 280px);
+            margin-left: -3rem;
+            margin-right: -3rem;
+            border-bottom: 4px solid #60a5fa;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(96, 165, 250, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .auth-btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-btn.signin {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-btn.signin:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .auth-btn.register {
+            background: #f59e0b;
+            color: white;
+            border: 1px solid #f59e0b;
+        }
+
+        .auth-btn.register:hover {
+            background: #d97706;
+            border-color: #d97706;
+            transform: translateY(-1px);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #1e293b;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-toggle:hover {
+            background: #f1f5f9;
+        }
+
+        /* Platform Cards */
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .platform-card {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #f1f5f9;
+            margin-bottom: 3rem;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid #f1f5f9;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-right: 1.5rem;
+            color: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            color: #0f172a;
+            letter-spacing: -0.01em;
+        }
+
+        /* Platform Buttons - Estilo de las imágenes */
+        .platform-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .platform-button {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem;
+            background: #f8fafc;
+            border-radius: 16px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            color: #0f172a;
+        }
+
+        .platform-button:hover {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+
+        .platform-button-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.4rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .platform-button-content {
+            flex: 1;
+        }
+
+        .platform-button-name {
+            font-weight: 600;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 0.25rem;
+            color: #0f172a;
+        }
+
+        .platform-button-account {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .platform-button-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+        }
+
+        .status-connected {
+            background: #10b981;
+            box-shadow: 0 0 0 2px #d1fae5;
+        }
+
+        .status-disconnected {
+            background: #ef4444;
+            box-shadow: 0 0 0 2px #fee2e2;
+        }
+
+        /* Colores específicos de plataformas */
+        .icon-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .icon-youtube { background: #ff0000; }
+        .icon-facebook { background: #1877f2; }
+        .icon-tiktok { background: #000000; }
+        .icon-twitter { background: #1da1f2; }
+        .icon-whatsapp { background: #25d366; }
+        .icon-linkedin { background: #0077b5; }
+        .icon-pinterest { background: #bd081c; }
+        .icon-discord { background: #5865f2; }
+        .icon-telegram { background: #0088cc; }
+        .icon-snapchat { background: #fffc00; color: #000; }
+        .icon-reddit { background: #ff4500; }
+        .icon-twitch { background: #9146ff; }
+        .icon-behance { background: #1769ff; }
+        .icon-github { background: #333; }
+        .icon-dribbble { background: #ea4c89; }
+        .icon-slack { background: #4a154b; }
+        .icon-messenger { background: #0084ff; }
+        .icon-vkontakte { background: #45668e; }
+        .icon-stackoverflow { background: #f48024; }
+        .icon-x { background: #000; }
+        .icon-threads { background: #000; }
+        .icon-lemon8 { background: #000; }
+        .icon-bereal { background: #000; }
+
+        .icon-shopify { background: #95bf47; }
+        .icon-amazon { background: #ff9900; }
+        .icon-hotmart { background: #ff6b35; }
+        .icon-clickbank { background: #ff6b6b; }
+        .icon-woocommerce { background: #96588a; }
+        .icon-therealreal { background: #000; }
+        .icon-vestiaire { background: #000; }
+        .icon-fashionphile { background: #000; }
+        .icon-spocket { background: #5cb85c; }
+        .icon-faire { background: #000; }
+        .icon-brandsgateway { background: #000; }
+        .icon-printful { background: #000; }
+        .icon-alibaba { background: #ff6a00; }
+        .icon-dsers { background: #000; }
+        .icon-zendrop { background: #000; }
+        .icon-cjdropshipping { background: #000; }
+        .icon-salehoo { background: #000; }
+        .icon-worldwidebrands { background: #000; }
+        .icon-modalyst { background: #000; }
+        .icon-dropified { background: #000; }
+
+        .icon-binance { background: #f3ba2f; }
+        .icon-kucoin { background: #23d69a; }
+        .icon-htx { background: #00d4aa; }
+        .icon-coinmarketcap { background: #3861fb; }
+        .icon-metatrader { background: #00a651; }
+        .icon-ethereum { background: #627eea; }
+        .icon-bitcoin { background: #f7931a; }
+        .icon-ai-trading { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); }
+
+        /* Crypto Widget */
+        .crypto-widget {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .crypto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .crypto-widget h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .crypto-widget h3 i {
+            color: #1e40af;
+            font-size: 1.2rem;
+        }
+
+        .crypto-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .refresh-btn {
+            background: #1e40af;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #1e3a8a;
+            transform: rotate(180deg);
+        }
+
+        .last-updated {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .crypto-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .crypto-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .crypto-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .crypto-rank {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #1e40af;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 1rem;
+        }
+
+        .crypto-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-right: 1rem;
+            color: #1e293b;
+        }
+
+        .crypto-info {
+            flex: 1;
+        }
+
+        .crypto-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.9rem;
+        }
+
+        .crypto-price {
+            color: #64748b;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+        }
+
+        .crypto-change {
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .crypto-change.positive {
+            color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .crypto-change.negative {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .crypto-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .coinmarketcap-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1e40af;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: rgba(30, 64, 175, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .coinmarketcap-link:hover {
+            background: rgba(30, 64, 175, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Market Analysis Section */
+        .market-analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .market-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .market-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #60a5fa;
+        }
+
+        .market-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .market-card-header i {
+            font-size: 1.5rem;
+            color: #1e40af;
+        }
+
+        .market-card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .market-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .stat-value.positive {
+            color: #10b981;
+        }
+
+        .stat-value.negative {
+            color: #ef4444;
+        }
+
+        .stat-value.neutral {
+            color: #6b7280;
+        }
+
+        .audience-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .audience-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .audience-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1f5f9;
+            border-radius: 50%;
+        }
+
+        .audience-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .audience-size {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .audience-label {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .opportunities-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .opportunity-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .opportunity-item:hover {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .opportunity-item i {
+            color: #10b981;
+            font-size: 1rem;
+        }
+
+        .opportunity-item span {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .charts-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-color: #60a5fa;
+        }
+
+        .chart-container h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container canvas {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 1rem;
+        }
+
+        .chart-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .workflow-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .workflow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .workflow-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-radius: 12px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            min-width: 100px;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .workflow-node i {
+            font-size: 1.5rem;
+            color: #1e40af;
+        }
+
+        .workflow-node span {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .workflow-connection {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            position: relative;
+        }
+
+        .workflow-connection::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid #3b82f6;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+
+        .workflow-connections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .connection-group {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+        }
+
+        .connection-group h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .connection-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .connection-item:hover {
+            background: #f1f5f9;
+            border-color: #60a5fa;
+        }
+
+        .connection-item i {
+            font-size: 1.2rem;
+            color: #1e40af;
+            width: 20px;
+        }
+
+        .connection-item span {
+            flex: 1;
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .connection-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .connection-status.active {
+            background: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Pricing Section */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid #e2e8f0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .pricing-card.featured {
+            border-color: #1e40af;
+            transform: scale(1.05);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pricing-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .currency {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .amount {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin: 0 0.25rem;
+        }
+
+        .period {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        .pricing-header p {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .pricing-features {
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            color: #1e293b;
+        }
+
+        .pricing-features i {
+            color: #10b981;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .pricing-action {
+            text-align: center;
+        }
+
+        .pricing-action .btn-primary {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Info Grid Section */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-section {
+            background: #1e293b;
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 2px solid #374151;
+            transition: all 0.3s ease;
+        }
+
+        .info-section:hover {
+            border-color: #60a5fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .info-section h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #60a5fa;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-section h3 i {
+            color: #60a5fa;
+            font-size: 1rem;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .info-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            display: inline-block;
+            padding: 0.25rem 0;
+        }
+
+        .info-section a:hover {
+            color: #60a5fa;
+            transform: translateX(5px);
+        }
+
+        .copyright-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #374151;
+        }
+
+        .copyright-content {
+            text-align: center;
+            background: #1e293b;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #374151;
+        }
+
+        .copyright-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        /* AI Section */
+        .ai-section {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .ai-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .ai-platforms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .ai-platform-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ai-platform-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .ai-platform-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .ai-platform-icon.chatgpt { background: linear-gradient(135deg, #10a37f 0%, #0d8a6f 100%); }
+        .ai-platform-icon.gemini { background: linear-gradient(135deg, #4285f4 0%, #34a853 100%); }
+        .ai-platform-icon.claude { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+        .ai-platform-icon.grok { background: linear-gradient(135deg, #000000 0%, #333333 100%); }
+        .ai-platform-icon.copilot { background: linear-gradient(135deg, #6e40c9 0%, #5a32a3 100%); }
+        .ai-platform-icon.copilot-microsoft { background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%); }
+
+        .ai-platform-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-platform-card p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .ai-status {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ai-feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .metric-content h3 {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-change {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .metric-change.positive {
+            color: #10b981;
+        }
+
+        .metric-status {
+            font-size: 0.8rem;
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        /* Automation Features */
+        .automation-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .automation-feature {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .feature-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-content p {
+            color: #64748b;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .feature-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-stats span {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: #1e293b;
+            border: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Content Features */
+        .content-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .content-feature {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Workflow Diagram */
+        .workflow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #64748b;
+         }
+
+        .step-arrow {
+            font-size: 1.5rem;
+            color: #1e40af;
+            font-weight: bold;
+        }
+
+        .connected-platforms {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .connected-platforms h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .platform-connections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .connection-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .connection-item i {
+            font-size: 1.2rem;
+            color: #1e40af;
+        }
+
+        .connection-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        .connection-status.connected {
+            background: #10b981;
+            box-shadow: 0 0 0 2px #d1fae5;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 4rem 2rem 2rem;
+            margin-top: 4rem;
+            width: calc(100vw - 280px);
+            position: relative;
+            bottom: 0;
+            clear: both;
+            margin-left: 280px;
+            min-height: 500px;
+            border-top: 3px solid #60a5fa;
+        }
+
+        .footer .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #60a5fa;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            display: inline-block;
+            padding: 0.25rem 0;
+        }
+
+        .footer-section ul li a:hover {
+            color: #60a5fa;
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            border-top: 2px solid #374151;
+            padding-top: 2rem;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* Popup de Preinscripción */
+        .prelaunch-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .prelaunch-content {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            position: relative;
+            animation: popupSlide 0.5s ease-out;
+        }
+
+        @keyframes popupSlide {
+            from {
+                transform: scale(0.8) translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .prelaunch-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .discount-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 1rem 0;
+            display: inline-block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100vw;
+            }
+            
+            .header {
+                width: 100vw;
+                margin-left: -2rem;
+                margin-right: -2rem;
+            }
+            
+            .footer {
+                margin-left: 0;
+                width: 100vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .platform-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ai-features {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .automation-feature,
+            .content-feature {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .workflow-step {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .step-arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+            <aside class="sidebar">
+            <div class="sidebar-header">
+                <button class="sidebar-toggle" onclick="toggleSidebarCollapse()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="logo">
+                    <div class="logo-mm">MM</div>
+                    <span>MarketerManager</span>
+                </div>
+            </div>
+        
+        <nav class="sidebar-nav">
+            <!-- Dashboard -->
+            <div class="nav-section">
+                <div class="nav-section-title">Dashboard</div>
+                <a href="#dashboard" class="nav-item active">
+                    <i class="fas fa-tachometer-alt nav-icon"></i>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <!-- Plataformas -->
+            <div class="nav-section">
+                <div class="nav-section-title">Plataformas</div>
+                <a href="https://social.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-share-alt nav-icon"></i>
+                    <span>Redes Sociales</span>
+                </a>
+                <a href="#ecommerce" class="nav-item">
+                    <i class="fas fa-shopping-cart nav-icon"></i>
+                    <span>E-commerce</span>
+                </a>
+                <a href="#blockchain" class="nav-item">
+                    <i class="fab fa-bitcoin nav-icon"></i>
+                    <span>Blockchain</span>
+                </a>
+                <a href="#ai" class="nav-item">
+                    <i class="fas fa-robot nav-icon"></i>
+                    <span>Inteligencia Artificial</span>
+                </a>
+                <a href="#workflow" class="nav-item">
+                    <i class="fas fa-cogs nav-icon"></i>
+                    <span>Workflow</span>
+                </a>
+            </div>
+
+            <!-- Herramientas -->
+            <div class="nav-section">
+                <div class="nav-section-title">Herramientas</div>
+                <a href="https://herramientas.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-palette nav-icon"></i>
+                    Branding
+                </a>
+                <a href="https://herramientas.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-chart-line nav-icon"></i>
+                    Analytics
+                </a>
+                <a href="https://herramientas.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-magic nav-icon"></i>
+                    Automatización
+                </a>
+                <a href="https://herramientas.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-edit nav-icon"></i>
+                    Gestión de Contenido
+                </a>
+            </div>
+
+            <!-- Soporte -->
+            <div class="nav-section">
+                <div class="nav-section-title">Soporte</div>
+                <a href="#documentation" class="nav-item">
+                    <i class="fas fa-book nav-icon"></i>
+                    Documentación
+                </a>
+                <a href="#support" class="nav-item">
+                    <i class="fas fa-headset nav-icon"></i>
+                    Soporte Técnico
+                </a>
+                <a href="#contact" class="nav-item">
+                    <i class="fas fa-envelope nav-icon"></i>
+                    Contáctanos
+                </a>
+                <a href="#getting-started" class="nav-item">
+                    <i class="fas fa-play nav-icon"></i>
+                    Cómo Empezar
+                </a>
+            </div>
+
+            <!-- Legal -->
+            <div class="nav-section">
+                <div class="nav-section-title">Legal</div>
+                <a href="#privacy" class="nav-item">
+                    <i class="fas fa-shield-alt nav-icon"></i>
+                    Aviso de Privacidad
+                </a>
+                <a href="#terms" class="nav-item">
+                    <i class="fas fa-file-contract nav-icon"></i>
+                    Términos y Condiciones
+                </a>
+                <a href="#shipping" class="nav-item">
+                    <i class="fas fa-shipping-fast nav-icon"></i>
+                    Política de Envíos
+                </a>
+                <a href="#copyright" class="nav-item">
+                    <i class="fas fa-copyright nav-icon"></i>
+                    Copyright
+                </a>
+            </div>
+
+            <!-- Comunidad -->
+            <div class="nav-section">
+                <div class="nav-section-title">Comunidad</div>
+                <a href="https://creator.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-blog nav-icon"></i>
+                    Blog
+                </a>
+                <a href="https://creator.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-handshake nav-icon"></i>
+                    Afiliados
+                </a>
+                <a href="https://creator.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-users nav-icon"></i>
+                    Síguenos
+                </a>
+                <a href="https://creator.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-info-circle nav-icon"></i>
+                    Sobre Nosotros
+                </a>
+            </div>
+
+            <!-- Pagos -->
+            <div class="nav-section">
+                <div class="nav-section-title">Pagos</div>
+                <a href="https://payments.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-credit-card nav-icon"></i>
+                    Facturación
+                </a>
+                <a href="https://payments.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-wallet nav-icon"></i>
+                    Métodos de Pago
+                </a>
+                <a href="https://payments.marketermanager.com" class="nav-item" target="_blank">
+                    <i class="fas fa-handshake nav-icon"></i>
+                    Acuerdos entre Apps
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="page-title">Dashboard Principal</h1>
+            <div class="user-menu">
+                <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="auth-buttons">
+                    <a href="#" class="auth-btn signin">Sign In</a>
+                    <a href="#" class="auth-btn register">Registrar</a>
+                </div>
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- AI Section -->
+        <section id="ai" class="ai-section">
+            <div class="ai-header">
+                <h2><i class="fas fa-robot"></i> Inteligencia Artificial Integrada</h2>
+                <p>IA avanzada con ChatGPT, Gemini, Claude, Grok, Copilot, GitHub Copilot y más para optimizar todas tus campañas</p>
+            </div>
+            <div class="ai-platforms">
+                <div class="ai-platform-card">
+                    <div class="ai-platform-icon chatgpt">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>ChatGPT</h3>
+                    <p>Generación de contenido y análisis avanzado</p>
+                    <div class="ai-status">Conectado</div>
+                </div>
+                <div class="ai-platform-card">
+                    <div class="ai-platform-icon gemini">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3>Gemini</h3>
+                    <p>IA multimodal de Google para análisis complejos</p>
+                    <div class="ai-status">Conectado</div>
+                </div>
+                <div class="ai-platform-card">
+                    <div class="ai-platform-icon claude">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Claude</h3>
+                    <p>Análisis de documentos y razonamiento avanzado</p>
+                    <div class="ai-status">Conectado</div>
+                </div>
+                <div class="ai-platform-card">
+                    <div class="ai-platform-icon grok">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Grok</h3>
+                    <p>IA conversacional de xAI con acceso en tiempo real</p>
+                    <div class="ai-status">Conectado</div>
+                </div>
+                <div class="ai-platform-card">
+                    <div class="ai-platform-icon copilot">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>GitHub Copilot</h3>
+                    <p>Asistente de programación y desarrollo</p>
+                    <div class="ai-status">Conectado</div>
+                </div>
+                <div class="ai-platform-card">
+                    <div class="ai-platform-icon copilot-microsoft">
+                        <i class="fas fa-microsoft"></i>
+                    </div>
+                    <h3>Microsoft Copilot</h3>
+                    <p>Asistente de productividad y análisis</p>
+                    <div class="ai-status">Conectado</div>
+                </div>
+            </div>
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <i class="fas fa-brain" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Análisis de Contenido</h3>
+                    <p>IA analiza y optimiza automáticamente tu contenido para cada plataforma</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-chart-line" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Predicción de Engagement</h3>
+                    <p>Predice el rendimiento de tus publicaciones antes de publicarlas</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-magic" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Generación Automática</h3>
+                    <p>Genera contenido optimizado para cada plataforma automáticamente</p>
+                </div>
+                <div class="ai-feature">
+                    <i class="fas fa-users" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <h3>Análisis de Audiencia</h3>
+                    <p>Analiza tu audiencia y sugiere el mejor momento para publicar</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h2 class="card-title">Analytics & Métricas Clave</h2>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Impresiones</h3>
+                        <div class="metric-value">2.4M</div>
+                        <div class="metric-change positive">+12.5%</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-mouse-pointer"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Clicks por Post</h3>
+                        <div class="metric-value">1,847</div>
+                        <div class="metric-change positive">+8.3%</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Monitoreo Tiempo Real</h3>
+                        <div class="metric-value">Activo</div>
+                        <div class="metric-status">Online</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Reportes Personalizados</h3>
+                        <div class="metric-value">15</div>
+                        <div class="metric-change positive">+3 nuevos</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-trending-up"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Identificación de Tendencias</h3>
+                        <div class="metric-value">24</div>
+                        <div class="metric-change positive">Tendencias activas</div>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="metric-content">
+                        <h3>Datos de Clientes</h3>
+                        <div class="metric-value">45.2K</div>
+                        <div class="metric-change positive">+15.7%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gráficas de Pastel -->
+            <div class="charts-section">
+                <h3 class="charts-title">Análisis Detallado</h3>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h4>Distribución de Audiencia</h4>
+                        <canvas id="audienceChart" width="300" height="300"></canvas>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #3b82f6;"></span>
+                                <span>Instagram (45%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #10b981;"></span>
+                                <span>Facebook (30%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #f59e0b;"></span>
+                                <span>TikTok (15%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #ef4444;"></span>
+                                <span>Twitter (10%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Fuentes de Tráfico</h4>
+                        <canvas id="trafficChart" width="300" height="300"></canvas>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #8b5cf6;"></span>
+                                <span>Orgánico (60%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #06b6d4;"></span>
+                                <span>Pago (25%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #84cc16;"></span>
+                                <span>Referral (10%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #f97316;"></span>
+                                <span>Directo (5%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <h4>Rendimiento por Plataforma</h4>
+                        <canvas id="performanceChart" width="300" height="300"></canvas>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #ec4899;"></span>
+                                <span>Alto (40%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #f59e0b;"></span>
+                                <span>Medio (35%)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background: #10b981;"></span>
+                                <span>Bajo (25%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Automation Section -->
+        <section id="automation" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-magic card-icon"></i>
+                <h2 class="card-title">Automatización & Workflow</h2>
+            </div>
+            <div class="automation-features">
+                <div class="automation-feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Publicación Unificada</h3>
+                        <p>Publica en todas las redes sociales con un solo clic. Configura tu contenido una vez y se distribuye automáticamente a todas las plataformas conectadas.</p>
+                        <div class="feature-stats">
+                            <span><i class="fas fa-clock"></i> Tiempo ahorrado: 85%</span>
+                            <span><i class="fas fa-check"></i> 15 redes conectadas</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="automation-feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Programación Inteligente</h3>
+                        <p>La IA analiza el mejor momento para publicar en cada plataforma basándose en el comportamiento de tu audiencia y las tendencias actuales.</p>
+                        <div class="feature-stats">
+                            <span><i class="fas fa-chart-line"></i> Engagement +40%</span>
+                            <span><i class="fas fa-clock"></i> Optimización automática</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="automation-feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-hourglass-half"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Tiempo Invertido en Plataforma</h3>
+                        <p>Monitorea cuánto tiempo pasas gestionando cada plataforma y optimiza tu productividad con reportes detallados.</p>
+                        <div class="feature-stats">
+                            <span><i class="fas fa-time"></i> 2.5h/día promedio</span>
+                            <span><i class="fas fa-arrow-down"></i> Reducción 60%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Diagrama n8n Workflow -->
+            <div class="workflow-section">
+                <h3 class="workflow-title">Diagrama de Conexiones n8n</h3>
+                <div class="workflow-diagram">
+                    <div class="workflow-node trigger-node">
+                        <i class="fas fa-play"></i>
+                        <span>Trigger</span>
+                    </div>
+                    
+                    <div class="workflow-connection"></div>
+                    
+                    <div class="workflow-node social-node">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </div>
+                    
+                    <div class="workflow-connection"></div>
+                    
+                    <div class="workflow-node process-node">
+                        <i class="fas fa-cog"></i>
+                        <span>Procesar</span>
+                    </div>
+                    
+                    <div class="workflow-connection"></div>
+                    
+                    <div class="workflow-node ecommerce-node">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Shopify</span>
+                    </div>
+                    
+                    <div class="workflow-connection"></div>
+                    
+                    <div class="workflow-node email-node">
+                        <i class="fas fa-envelope"></i>
+                        <span>Email</span>
+                    </div>
+                    
+                    <div class="workflow-connection"></div>
+                    
+                    <div class="workflow-node analytics-node">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Analytics</span>
+                    </div>
+                </div>
+                
+                <div class="workflow-connections-grid">
+                    <div class="connection-group">
+                        <h4>Redes Sociales</h4>
+                        <div class="connection-items">
+                            <div class="connection-item">
+                                <i class="fab fa-facebook"></i>
+                                <span>Facebook</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fab fa-instagram"></i>
+                                <span>Instagram</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fab fa-twitter"></i>
+                                <span>Twitter</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fab fa-tiktok"></i>
+                                <span>TikTok</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fab fa-linkedin"></i>
+                                <span>LinkedIn</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="connection-group">
+                        <h4>E-commerce</h4>
+                        <div class="connection-items">
+                            <div class="connection-item">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Shopify</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fab fa-amazon"></i>
+                                <span>Amazon</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fab fa-ebay"></i>
+                                <span>eBay</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fas fa-store"></i>
+                                <span>WooCommerce</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="connection-group">
+                        <h4>Herramientas</h4>
+                        <div class="connection-items">
+                            <div class="connection-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>Mailchimp</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Google Analytics</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>Google Calendar</span>
+                                <div class="connection-status active"></div>
+                            </div>
+                            <div class="connection-item">
+                                <i class="fas fa-file-alt"></i>
+                                <span>Google Sheets</span>
+                                <div class="connection-status active"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Management Section -->
+        <section id="content" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-edit card-icon"></i>
+                <h2 class="card-title">Gestión de Contenido</h2>
+            </div>
+            <div class="content-features">
+                <div class="content-feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Biblioteca Personal</h3>
+                        <p>Almacena y organiza todo tu contenido multimedia en una biblioteca personal. Accede a imágenes, videos y documentos desde cualquier lugar.</p>
+                        <div class="feature-stats">
+                            <span><i class="fas fa-images"></i> 2,847 archivos</span>
+                            <span><i class="fas fa-cloud"></i> 15GB almacenado</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Control de Versiones</h3>
+                        <p>Mantén un historial completo de todas las versiones de tu contenido. Compara cambios y revierte a versiones anteriores cuando sea necesario.</p>
+                        <div class="feature-stats">
+                            <span><i class="fas fa-history"></i> 156 versiones</span>
+                            <span><i class="fas fa-undo"></i> Reversión instantánea</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-feature">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h3>Calendario y Planificador</h3>
+                        <p>Planifica tu contenido con un calendario visual intuitivo. Organiza campañas, eventos y publicaciones programadas.</p>
+                        <div class="feature-stats">
+                            <span><i class="fas fa-calendar"></i> 30 días vista</span>
+                            <span><i class="fas fa-tasks"></i> 45 tareas activas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Diagram Section -->
+        <section id="workflow" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-project-diagram card-icon"></i>
+                <h2 class="card-title">Workflow & Conexiones</h2>
+            </div>
+            <div class="workflow-diagram">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Publica en YouTube</h3>
+                        <p>Sube tu video a YouTube y configura la información básica</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Selecciona Redes</h3>
+                        <p>Elige automáticamente las redes sociales donde quieres compartir</p>
+                    </div>
+                    <div class="step-arrow">→</div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Distribución Automática</h3>
+                        <p>El contenido se adapta y publica en todas las plataformas seleccionadas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="connected-platforms">
+                <h3>Plataformas Conectadas:</h3>
+                <div class="platform-connections">
+                    <div class="connection-item">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube</span>
+                        <div class="connection-status connected"></div>
+                    </div>
+                    <div class="connection-item">
+                        <i class="fab fa-facebook"></i>
+                        <span>Facebook</span>
+                        <div class="connection-status connected"></div>
+                    </div>
+                    <div class="connection-item">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                        <div class="connection-status connected"></div>
+                    </div>
+                    <div class="connection-item">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                        <div class="connection-status connected"></div>
+                    </div>
+                    <div class="connection-item">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                        <div class="connection-status connected"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Redes Sociales -->
+        <section id="social" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-share-alt card-icon"></i>
+                <h2 class="card-title">Redes Sociales (30+ Plataformas)</h2>
+            </div>
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Instagram</div>
+                        <div class="platform-button-account">@tu.cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">YouTube</div>
+                        <div class="platform-button-account">Nombre del Canal</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Facebook</div>
+                        <div class="platform-button-account">Tu Cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">TikTok</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-twitter">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Twitter/X</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">WhatsApp</div>
+                        <div class="platform-button-account">+01 234 567 890</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-linkedin">
+                        <i class="fab fa-linkedin"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">LinkedIn</div>
+                        <div class="platform-button-account">Tu Perfil</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-pinterest">
+                        <i class="fab fa-pinterest"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Pinterest</div>
+                        <div class="platform-button-account">Tu Tablero</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-discord">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Discord</div>
+                        <div class="platform-button-account">Tu Servidor</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-telegram">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Telegram</div>
+                        <div class="platform-button-account">Tu Canal</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-snapchat">
+                        <i class="fab fa-snapchat"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Snapchat</div>
+                        <div class="platform-button-account">Tu Historia</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-reddit">
+                        <i class="fab fa-reddit"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Reddit</div>
+                        <div class="platform-button-account">Tu Subreddit</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-twitch">
+                        <i class="fab fa-twitch"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Twitch</div>
+                        <div class="platform-button-account">Tu Canal</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-behance">
+                        <i class="fab fa-behance"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Behance</div>
+                        <div class="platform-button-account">Tu Portfolio</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-github">
+                        <i class="fab fa-github"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">GitHub</div>
+                        <div class="platform-button-account">Tu Repositorio</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-dribbble">
+                        <i class="fab fa-dribbble"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Dribbble</div>
+                        <div class="platform-button-account">Tu Portfolio</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-slack">
+                        <i class="fab fa-slack"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Slack</div>
+                        <div class="platform-button-account">Tu Workspace</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-messenger">
+                        <i class="fab fa-facebook-messenger"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Messenger</div>
+                        <div class="platform-button-account">Tu Chat</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-vkontakte">
+                        <i class="fab fa-vk"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">VKontakte</div>
+                        <div class="platform-button-account">Tu Perfil</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-stackoverflow">
+                        <i class="fab fa-stack-overflow"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Stack Overflow</div>
+                        <div class="platform-button-account">Tu Perfil</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-x">
+                        <i class="fab fa-x-twitter"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">X (Twitter)</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-threads">
+                        <i class="fas fa-thread"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Threads</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-lemon8">
+                        <i class="fas fa-lemon"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Lemon8</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-bereal">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">BeReal</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-primary" onclick="addPlatform('social')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Red Social
+                </a>
+                <a href="#" class="btn-secondary" onclick="viewAllPlatforms('social')">
+                    <i class="fas fa-eye"></i>
+                    Ver Todas
+                </a>
+            </div>
+        </section>
+
+        <!-- E-commerce -->
+        <section id="ecommerce" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-shopping-cart card-icon"></i>
+                <h2 class="card-title">E-commerce (20+ Plataformas)</h2>
+            </div>
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-shopify">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Shopify</div>
+                        <div class="platform-button-account">Mi Tienda</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-amazon">
+                        <i class="fab fa-amazon"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Amazon</div>
+                        <div class="platform-button-account">Vendedor Central</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-hotmart">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Hotmart</div>
+                        <div class="platform-button-account">Productos Digitales</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-clickbank">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">ClickBank</div>
+                        <div class="platform-button-account">Afiliados</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-primary" onclick="addPlatform('ecommerce')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Tienda
+                </a>
+                <a href="#" class="btn-secondary" onclick="viewAllPlatforms('ecommerce')">
+                    <i class="fas fa-eye"></i>
+                    Ver Todas
+                </a>
+            </div>
+        </section>
+
+        <!-- Blockchain -->
+        <section id="blockchain" class="platform-card">
+            <div class="card-header">
+                <i class="fab fa-bitcoin card-icon"></i>
+                <h2 class="card-title">Blockchain & Exchanges</h2>
+            </div>
+            
+            <!-- Top 10 Cryptocurrencies Widget -->
+            <div class="crypto-widget">
+                <div class="crypto-header">
+                    <h3><i class="fas fa-chart-bar"></i> Top 10 Cryptocurrencies</h3>
+                    <div class="crypto-controls">
+                        <button class="refresh-btn" onclick="refreshCryptoData()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <span class="last-updated">Actualizado hace 2 min</span>
+                    </div>
+                </div>
+                <div class="crypto-list" id="cryptoList">
+                    <!-- Los datos se cargarán dinámicamente -->
+                </div>
+                <div class="crypto-footer">
+                    <a href="https://coinmarketcap.com" target="_blank" class="coinmarketcap-link">
+                        <i class="fas fa-external-link-alt"></i>
+                        Ver en CoinMarketCap
+                    </a>
+                </div>
+            </div>
+
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-binance">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Binance</div>
+                        <div class="platform-button-account">Trading Account</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-kucoin">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">KuCoin</div>
+                        <div class="platform-button-account">Exchange Account</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-htx">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">HTX</div>
+                        <div class="platform-button-account">Trading Account</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-coinmarketcap">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">CoinMarketCap</div>
+                        <div class="platform-button-account">Portfolio & Analytics</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-metatrader">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">MetaTrader</div>
+                        <div class="platform-button-account">Trading Platform</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-ai-trading">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">AI Trading Bot</div>
+                        <div class="platform-button-account">Automated Trading</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-primary" onclick="addPlatform('blockchain')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Exchange
+                </a>
+                <a href="#" class="btn-secondary" onclick="viewAllPlatforms('blockchain')">
+                    <i class="fas fa-eye"></i>
+                    Ver Todos
+                </a>
+            </div>
+        </section>
+
+        <!-- Códigos de Invitación -->
+        <section class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-gift card-icon"></i>
+                <h2 class="card-title">Códigos de Invitación</h2>
+            </div>
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-binance">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Binance</div>
+                        <div class="platform-button-account">Código: BINANCE2024</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-htx">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">HTX</div>
+                        <div class="platform-button-account">Código: HTXWELCOME</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-kucoin">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">KuCoin</div>
+                        <div class="platform-button-account">Código: KUCOINREF</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Sección Todas las Redes Sociales -->
+        <section id="all-social" class="platform-card" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-share-alt card-icon"></i>
+                <h2 class="card-title">Todas las Redes Sociales (30+ Plataformas)</h2>
+            </div>
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Instagram</div>
+                        <div class="platform-button-account">@tu.cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">YouTube</div>
+                        <div class="platform-button-account">Nombre del Canal</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Facebook</div>
+                        <div class="platform-button-account">Tu Cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">TikTok</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-twitter">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Twitter/X</div>
+                        <div class="platform-button-account">@tu_cuenta</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-whatsapp">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">WhatsApp</div>
+                        <div class="platform-button-account">+01 234 567 890</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-linkedin">
+                        <i class="fab fa-linkedin"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">LinkedIn</div>
+                        <div class="platform-button-account">Tu Perfil</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-pinterest">
+                        <i class="fab fa-pinterest"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Pinterest</div>
+                        <div class="platform-button-account">Tu Tablero</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-discord">
+                        <i class="fab fa-discord"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Discord</div>
+                        <div class="platform-button-account">Tu Servidor</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-telegram">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Telegram</div>
+                        <div class="platform-button-account">Tu Canal</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-snapchat">
+                        <i class="fab fa-snapchat"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Snapchat</div>
+                        <div class="platform-button-account">Tu Historia</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-reddit">
+                        <i class="fab fa-reddit"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Reddit</div>
+                        <div class="platform-button-account">Tu Subreddit</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-twitch">
+                        <i class="fab fa-twitch"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Twitch</div>
+                        <div class="platform-button-account">Tu Canal</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-primary" onclick="addPlatform('social')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Red Social
+                </a>
+                <a href="#" class="btn-secondary" onclick="hideAllPlatforms()">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+            </div>
+        </section>
+
+        <!-- Sección Todas las E-commerce -->
+        <section id="all-ecommerce" class="platform-card" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-shopping-cart card-icon"></i>
+                <h2 class="card-title">Todas las E-commerce (20+ Plataformas)</h2>
+            </div>
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-shopify">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Shopify</div>
+                        <div class="platform-button-account">Mi Tienda</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-amazon">
+                        <i class="fab fa-amazon"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Amazon</div>
+                        <div class="platform-button-account">Vendedor Central</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-hotmart">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Hotmart</div>
+                        <div class="platform-button-account">Productos Digitales</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-clickbank">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">ClickBank</div>
+                        <div class="platform-button-account">Afiliados</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-woocommerce">
+                        <i class="fab fa-wordpress"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">WooCommerce</div>
+                        <div class="platform-button-account">Mi Tienda</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-therealreal">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">TheRealReal</div>
+                        <div class="platform-button-account">Luxury Resale</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-vestiaire">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Vestiaire</div>
+                        <div class="platform-button-account">Fashion Marketplace</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-fashionphile">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Fashionphile</div>
+                        <div class="platform-button-account">Luxury Handbags</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-spocket">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Spocket</div>
+                        <div class="platform-button-account">Dropshipping</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-faire">
+                        <i class="fas fa-store-alt"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Faire</div>
+                        <div class="platform-button-account">Wholesale</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-brandsgateway">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">BrandsGateway</div>
+                        <div class="platform-button-account">Luxury Brands</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-primary" onclick="addPlatform('ecommerce')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Tienda
+                </a>
+                <a href="#" class="btn-secondary" onclick="hideAllPlatforms()">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+            </div>
+        </section>
+
+        <!-- Sección Todas las Blockchain -->
+        <section id="all-blockchain" class="platform-card" style="display: none;">
+            <div class="card-header">
+                <i class="fab fa-bitcoin card-icon"></i>
+                <h2 class="card-title">Todas las Blockchain & Exchanges</h2>
+            </div>
+            <div class="platform-buttons">
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-binance">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Binance</div>
+                        <div class="platform-button-account">Trading Account</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-kucoin">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">KuCoin</div>
+                        <div class="platform-button-account">Exchange Account</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-htx">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">HTX</div>
+                        <div class="platform-button-account">Trading Account</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-coinmarketcap">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">CoinMarketCap</div>
+                        <div class="platform-button-account">Portfolio</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-metatrader">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">MetaTrader</div>
+                        <div class="platform-button-account">Trading Platform</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-ethereum">
+                        <i class="fab fa-ethereum"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Ethereum</div>
+                        <div class="platform-button-account">Wallet</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+                <a href="#" class="platform-button">
+                    <div class="platform-button-icon icon-bitcoin">
+                        <i class="fab fa-bitcoin"></i>
+                    </div>
+                    <div class="platform-button-content">
+                        <div class="platform-button-name">Bitcoin</div>
+                        <div class="platform-button-account">Wallet</div>
+                    </div>
+                    <div class="platform-button-status status-connected"></div>
+                </a>
+            </div>
+            <div class="action-buttons">
+                <a href="#" class="btn-primary" onclick="addPlatform('blockchain')">
+                    <i class="fas fa-plus"></i>
+                    Agregar Exchange
+                </a>
+                <a href="#" class="btn-secondary" onclick="hideAllPlatforms()">
+                    <i class="fas fa-arrow-left"></i>
+                    Volver
+                </a>
+            </div>
+        </section>
+
+        <!-- Market Analysis Section -->
+        <section class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-chart-line card-icon"></i>
+                <h2 class="card-title">Análisis de Mercado</h2>
+            </div>
+            <div class="market-analysis-grid">
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <i class="fas fa-trending-up"></i>
+                        <h3>Tendencias del Mercado</h3>
+                    </div>
+                    <div class="market-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Crecimiento Mensual</span>
+                            <span class="stat-value positive">+15.3%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">ROI Promedio</span>
+                            <span class="stat-value positive">+8.7%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Competencia</span>
+                            <span class="stat-value neutral">Media</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <i class="fas fa-users"></i>
+                        <h3>Audiencia Objetivo</h3>
+                    </div>
+                    <div class="audience-stats">
+                        <div class="audience-item">
+                            <div class="audience-icon">👥</div>
+                            <div class="audience-info">
+                                <span class="audience-size">2.5M</span>
+                                <span class="audience-label">Seguidores Totales</span>
+                            </div>
+                        </div>
+                        <div class="audience-item">
+                            <div class="audience-icon">🎯</div>
+                            <div class="audience-info">
+                                <span class="audience-size">85%</span>
+                                <span class="audience-label">Engagement Rate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="market-card">
+                    <div class="market-card-header">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Oportunidades</h3>
+                    </div>
+                    <div class="opportunities-list">
+                        <div class="opportunity-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Expansión a TikTok</span>
+                        </div>
+                        <div class="opportunity-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Contenido de Video</span>
+                        </div>
+                        <div class="opportunity-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Colaboraciones</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-tags card-icon"></i>
+                <h2 class="card-title">Planes y Precios</h2>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Starter</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">29</span>
+                            <span class="period">/mes</span>
+                        </div>
+                        <p>Perfecto para comenzar</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> 5 Redes Sociales</li>
+                            <li><i class="fas fa-check"></i> 2 Tiendas E-commerce</li>
+                            <li><i class="fas fa-check"></i> Analytics Básicos</li>
+                            <li><i class="fas fa-check"></i> Programación de Posts</li>
+                            <li><i class="fas fa-check"></i> Soporte por Email</li>
+                            <li><i class="fas fa-check"></i> 1 Usuario</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-action">
+                        <a href="https://payments.marketermanager.com/starter" class="btn-primary" target="_blank">
+                            <i class="fas fa-rocket"></i>
+                            Empezar Gratis
+                        </a>
+                    </div>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">Más Popular</div>
+                    <div class="pricing-header">
+                        <h3>Growth</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">79</span>
+                            <span class="period">/mes</span>
+                        </div>
+                        <p>Para negocios en crecimiento</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> 15 Redes Sociales</li>
+                            <li><i class="fas fa-check"></i> 5 Tiendas E-commerce</li>
+                            <li><i class="fas fa-check"></i> Analytics Avanzados</li>
+                            <li><i class="fas fa-check"></i> IA Integrada</li>
+                            <li><i class="fas fa-check"></i> Automatización</li>
+                            <li><i class="fas fa-check"></i> Soporte Prioritario</li>
+                            <li><i class="fas fa-check"></i> 3 Usuarios</li>
+                            <li><i class="fas fa-check"></i> API Access</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-action">
+                        <a href="https://payments.marketermanager.com/growth" class="btn-primary" target="_blank">
+                            <i class="fas fa-chart-line"></i>
+                            Crecer Ahora
+                        </a>
+                    </div>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">
+                            <span class="currency">$</span>
+                            <span class="amount">199</span>
+                            <span class="period">/mes</span>
+                        </div>
+                        <p>Para grandes empresas</p>
+                    </div>
+                    <div class="pricing-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Redes Sociales Ilimitadas</li>
+                            <li><i class="fas fa-check"></i> E-commerce Ilimitado</li>
+                            <li><i class="fas fa-check"></i> IA Personalizada</li>
+                            <li><i class="fas fa-check"></i> Analytics Enterprise</li>
+                            <li><i class="fas fa-check"></i> Workflow Avanzado</li>
+                            <li><i class="fas fa-check"></i> Soporte 24/7</li>
+                            <li><i class="fas fa-check"></i> Usuarios Ilimitados</li>
+                            <li><i class="fas fa-check"></i> White Label</li>
+                            <li><i class="fas fa-check"></i> Integración Personalizada</li>
+                        </ul>
+                    </div>
+                    <div class="pricing-action">
+                        <a href="https://payments.marketermanager.com/enterprise" class="btn-primary" target="_blank">
+                            <i class="fas fa-crown"></i>
+                            Enterprise
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Información Adicional -->
+        <section class="platform-card">
+            <div class="card-header">
+                <i class="fas fa-info-circle card-icon"></i>
+                <h2 class="card-title">Información Completa de la Plataforma</h2>
+            </div>
+            <div class="info-grid">
+                <div class="info-section">
+                    <h3><i class="fas fa-tools"></i> Herramientas</h3>
+                    <ul>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Analytics</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Automatización</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Gestión de Contenido</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Workflow</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Branding</a></li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h3><i class="fas fa-headset"></i> Soporte</h3>
+                    <ul>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Documentación</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Soporte Técnico</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Contáctanos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Cómo Empezar</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h3><i class="fas fa-gavel"></i> Legal</h3>
+                    <ul>
+                        <li><a href="legal/privacidad.html" target="_blank">Aviso de Privacidad</a></li>
+                        <li><a href="legal/terminos.html" target="_blank">Términos y Condiciones</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Política de Envíos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Política de Cookies</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Copyright</a></li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h3><i class="fas fa-building"></i> Empresa</h3>
+                    <ul>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Sobre Nosotros</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Cumplimiento Legal</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Seguridad de Datos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Protección de Datos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Afiliados</a></li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h3><i class="fas fa-users"></i> Comunidad</h3>
+                    <ul>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Síguenos</a></li>
+                        <li><a href="https://payments.marketermanager.com" target="_blank">Métodos de Pago</a></li>
+                        <li><a href="https://payments.marketermanager.com" target="_blank">Acuerdos entre Apps</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">SEO</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Monetización</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright-section">
+                <div class="copyright-content">
+                    <p>&copy; 2024 MarketerManager. Todos los derechos reservados. | Cumplimiento de leyes de publicidad y comercio electrónico | Seguridad de datos certificada</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Plataforma</h3>
+                    <ul>
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="https://social.marketermanager.com" target="_blank">Redes Sociales</a></li>
+                        <li><a href="#ecommerce">E-commerce</a></li>
+                        <li><a href="#blockchain">Blockchain</a></li>
+                        <li><a href="#ai">Inteligencia Artificial</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Herramientas</h3>
+                    <ul>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Analytics</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Automatización</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Gestión de Contenido</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Workflow</a></li>
+                        <li><a href="https://herramientas.marketermanager.com" target="_blank">Branding</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Soporte</h3>
+                    <ul>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Documentación</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Soporte Técnico</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Contáctanos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Cómo Empezar</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="legal/privacidad.html" target="_blank">Aviso de Privacidad</a></li>
+                        <li><a href="legal/terminos.html" target="_blank">Términos y Condiciones</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Política de Envíos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Política de Cookies</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Copyright</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Empresa</h3>
+                    <ul>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Sobre Nosotros</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Cumplimiento Legal</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Seguridad de Datos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Protección de Datos</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Afiliados</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Comunidad</h3>
+                    <ul>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Síguenos</a></li>
+                        <li><a href="https://payments.marketermanager.com" target="_blank">Métodos de Pago</a></li>
+                        <li><a href="https://payments.marketermanager.com" target="_blank">Acuerdos entre Apps</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">SEO</a></li>
+                        <li><a href="https://creator.marketermanager.com" target="_blank">Monetización</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MarketerManager. Todos los derechos reservados. | Cumplimiento de leyes de publicidad y comercio electrónico | Seguridad de datos certificada</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Popup de Preinscripción -->
+    <div class="prelaunch-popup" id="prelaunchPopup">
+        <div class="prelaunch-content">
+            <button class="prelaunch-close" onclick="closePrelaunch()">×</button>
+            <h1><i class="fas fa-rocket"></i> ¡Fase Beta - 40% Descuento!</h1>
+            <div class="discount-badge">
+                <i class="fas fa-percentage"></i> 40% DE DESCUENTO
+            </div>
+            <p>Acceso anticipado a MarketerManager con todas las funcionalidades premium incluidas.</p>
+            
+            <h3>Beneficios de la Fase Beta:</h3>
+            <ul style="text-align: left; margin: 1rem 0;">
+                <li>✓ Acceso vitalicio al plan Enterprise</li>
+                <li>✓ Todas las integraciones premium</li>
+                <li>✓ IA personalizada incluida</li>
+                <li>✓ Soporte prioritario 24/7</li>
+                <li>✓ Actualizaciones gratuitas</li>
+                <li>✓ Funciones beta exclusivas</li>
+            </ul>
+
+            <button class="btn-primary" onclick="joinPrelaunch()">
+                <i class="fas fa-gift"></i> ¡Unirme a la Fase Beta!
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Navegación activa
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Popup functions
+        function closePrelaunch() {
+            document.getElementById('prelaunchPopup').style.display = 'none';
+        }
+
+        function joinPrelaunch() {
+            alert('🎉 ¡Gracias por unirte a la Fase Beta!\n\nTe hemos enviado un email con los detalles de tu descuento del 40%.\n\n¡Bienvenido a MarketerManager!');
+            closePrelaunch();
+        }
+
+        // Funciones del dashboard
+        function addPlatform(type) {
+            const platformTypes = {
+                'social': 'Red Social',
+                'ecommerce': 'Tienda E-commerce',
+                'blockchain': 'Exchange/Blockchain',
+                'workflow': 'Automatización',
+                'ai-tools': 'Herramienta de IA'
+            };
+            
+            alert(`🔄 Agregando ${platformTypes[type]}...\n\nSe abrirá el modal de configuración para conectar la nueva plataforma.`);
+        }
+
+        function viewAllPlatforms(type) {
+            // Ocultar todas las secciones principales
+            document.querySelectorAll('.platform-card').forEach(card => {
+                if (!card.id.startsWith('all-')) {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Mostrar la sección correspondiente
+            if (type === 'social') {
+                document.getElementById('all-social').style.display = 'block';
+            } else if (type === 'ecommerce') {
+                document.getElementById('all-ecommerce').style.display = 'block';
+            } else if (type === 'blockchain') {
+                document.getElementById('all-blockchain').style.display = 'block';
+            }
+            
+            // Scroll suave a la sección
+            setTimeout(() => {
+                document.getElementById(`all-${type}`).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        }
+
+        function hideAllPlatforms() {
+            // Ocultar todas las secciones "all-"
+            document.querySelectorAll('[id^="all-"]').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Mostrar todas las secciones principales
+            document.querySelectorAll('.platform-card').forEach(card => {
+                if (!card.id.startsWith('all-')) {
+                    card.style.display = 'block';
+                }
+            });
+            
+            // Scroll al inicio
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Toggle sidebar function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Toggle sidebar collapse function
+        function toggleSidebarCollapse() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const header = document.querySelector('.header');
+            const footer = document.querySelector('.footer');
+            
+            sidebar.classList.toggle('collapsed');
+            
+            if (sidebar.classList.contains('collapsed')) {
+                mainContent.style.marginLeft = '80px';
+                mainContent.style.width = 'calc(100vw - 80px)';
+                header.style.width = 'calc(100vw - 80px)';
+                footer.style.marginLeft = '80px';
+                footer.style.width = 'calc(100vw - 80px)';
+            } else {
+                mainContent.style.marginLeft = '280px';
+                mainContent.style.width = 'calc(100vw - 280px)';
+                header.style.width = 'calc(100vw - 280px)';
+                footer.style.marginLeft = '280px';
+                footer.style.width = 'calc(100vw - 280px)';
+            }
+        }
+
+        // Crypto Data Functions
+        async function loadCryptoData() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=10&page=1&sparkline=false');
+                const data = await response.json();
+                
+                const cryptoList = document.getElementById('cryptoList');
+                cryptoList.innerHTML = '';
+                
+                data.forEach((crypto, index) => {
+                    const changeClass = crypto.price_change_percentage_24h >= 0 ? 'positive' : 'negative';
+                    const changeSymbol = crypto.price_change_percentage_24h >= 0 ? '+' : '';
+                    
+                    const cryptoItem = document.createElement('div');
+                    cryptoItem.className = 'crypto-item';
+                    cryptoItem.innerHTML = `
+                        <div class="crypto-rank">${index + 1}</div>
+                        <div class="crypto-icon">
+                            <img src="${crypto.image}" alt="${crypto.symbol.toUpperCase()}" width="24" height="24">
+                        </div>
+                        <div class="crypto-info">
+                            <div class="crypto-name">${crypto.name} (${crypto.symbol.toUpperCase()})</div>
+                            <div class="crypto-price">$${crypto.current_price.toLocaleString()}</div>
+                        </div>
+                        <div class="crypto-change ${changeClass}">${changeSymbol}${crypto.price_change_percentage_24h.toFixed(2)}%</div>
+                    `;
+                    cryptoList.appendChild(cryptoItem);
+                });
+                
+                updateLastUpdated();
+            } catch (error) {
+                console.error('Error loading crypto data:', error);
+                loadFallbackCryptoData();
+            }
+        }
+
+        function loadFallbackCryptoData() {
+            const cryptoList = document.getElementById('cryptoList');
+            const fallbackData = [
+                { rank: 1, symbol: 'BTC', name: 'Bitcoin', price: 67500, change: 2.45, icon: '₿' },
+                { rank: 2, symbol: 'ETH', name: 'Ethereum', price: 3450, change: 1.87, icon: 'Ξ' },
+                { rank: 3, symbol: 'BNB', name: 'BNB', price: 580, change: -0.52, icon: 'BNB' },
+                { rank: 4, symbol: 'SOL', name: 'Solana', price: 145, change: 5.23, icon: 'SOL' },
+                { rank: 5, symbol: 'ADA', name: 'Cardano', price: 0.485, change: 1.12, icon: 'ADA' },
+                { rank: 6, symbol: 'XRP', name: 'XRP', price: 0.542, change: -0.78, icon: 'XRP' },
+                { rank: 7, symbol: 'DOT', name: 'Polkadot', price: 7.25, change: 3.45, icon: 'DOT' },
+                { rank: 8, symbol: 'DOGE', name: 'Dogecoin', price: 0.078, change: 1.89, icon: 'DOGE' },
+                { rank: 9, symbol: 'AVAX', name: 'Avalanche', price: 38.50, change: 4.12, icon: 'AVAX' },
+                { rank: 10, symbol: 'MATIC', name: 'Polygon', price: 0.875, change: -0.34, icon: 'MATIC' }
+            ];
+            
+            cryptoList.innerHTML = '';
+            fallbackData.forEach(crypto => {
+                const changeClass = crypto.change >= 0 ? 'positive' : 'negative';
+                const changeSymbol = crypto.change >= 0 ? '+' : '';
+                
+                const cryptoItem = document.createElement('div');
+                cryptoItem.className = 'crypto-item';
+                cryptoItem.innerHTML = `
+                    <div class="crypto-rank">${crypto.rank}</div>
+                    <div class="crypto-icon">${crypto.icon}</div>
+                    <div class="crypto-info">
+                        <div class="crypto-name">${crypto.name} (${crypto.symbol})</div>
+                        <div class="crypto-price">$${crypto.price.toLocaleString()}</div>
+                    </div>
+                    <div class="crypto-change ${changeClass}">${changeSymbol}${crypto.change}%</div>
+                `;
+                cryptoList.appendChild(cryptoItem);
+            });
+            
+            updateLastUpdated();
+        }
+
+        function refreshCryptoData() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            refreshBtn.style.transform = 'rotate(360deg)';
+            loadCryptoData();
+            
+            setTimeout(() => {
+                refreshBtn.style.transform = 'rotate(0deg)';
+            }, 1000);
+        }
+
+        function updateLastUpdated() {
+            const lastUpdated = document.querySelector('.last-updated');
+            const now = new Date();
+            lastUpdated.textContent = `Actualizado ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+
+        // Load crypto data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCryptoData();
+            // Refresh data every 5 minutes
+            setInterval(loadCryptoData, 300000);
+            
+            // Draw pie charts
+            drawPieCharts();
+        });
+
+        // Pie Chart Functions
+        function drawPieCharts() {
+            // Audience Distribution Chart
+            drawPieChart('audienceChart', [
+                { label: 'Instagram', value: 45, color: '#3b82f6' },
+                { label: 'Facebook', value: 30, color: '#10b981' },
+                { label: 'TikTok', value: 15, color: '#f59e0b' },
+                { label: 'Twitter', value: 10, color: '#ef4444' }
+            ]);
+
+            // Traffic Sources Chart
+            drawPieChart('trafficChart', [
+                { label: 'Orgánico', value: 60, color: '#8b5cf6' },
+                { label: 'Pago', value: 25, color: '#06b6d4' },
+                { label: 'Referral', value: 10, color: '#84cc16' },
+                { label: 'Directo', value: 5, color: '#f97316' }
+            ]);
+
+            // Performance Chart
+            drawPieChart('performanceChart', [
+                { label: 'Alto', value: 40, color: '#ec4899' },
+                { label: 'Medio', value: 35, color: '#f59e0b' },
+                { label: 'Bajo', value: 25, color: '#10b981' }
+            ]);
+        }
+
+        function drawPieChart(canvasId, data) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 20;
+
+            let currentAngle = -Math.PI / 2; // Start from top
+
+            data.forEach((item, index) => {
+                const sliceAngle = (item.value / 100) * 2 * Math.PI;
+
+                // Draw slice
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.closePath();
+                ctx.fillStyle = item.color;
+                ctx.fill();
+
+                // Add border
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Add hover effect
+                canvas.addEventListener('mousemove', function(e) {
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+                    const angle = Math.atan2(y - centerY, x - centerX);
+                    
+                    if (distance <= radius && angle >= currentAngle && angle <= currentAngle + sliceAngle) {
+                        canvas.style.cursor = 'pointer';
+                    } else {
+                        canvas.style.cursor = 'default';
+                    }
+                });
+
+                currentAngle += sliceAngle;
+            });
+
+            // Add center circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * 0.3, 0, 2 * Math.PI);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 MarketerManager - Dashboard Completo cargado');
+            console.log('✅ Menú lateral completo');
+            console.log('✅ Analytics & Métricas');
+            console.log('✅ Automatización & Workflow');
+            console.log('✅ Gestión de Contenido');
+            console.log('✅ Footer con enlaces legales');
+            console.log('✅ Popup de Fase Beta');
+        });
+    </script>
+</body>
+</html> 
